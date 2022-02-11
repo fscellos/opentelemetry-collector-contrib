@@ -169,7 +169,28 @@ func (c *collector) convertSummary(metric pdata.Metric) (prometheus.Metric, erro
 }
 
 func (c *collector) convertDoubleHistogram(metric pdata.Metric) (prometheus.Metric, error) {
+	// FAB: ICI POUR AJOUTER LES TRACES_ID AUX HISTOGRAMMES
 	ip := metric.Histogram().DataPoints().At(0)
+
+	// Récupération des exemplars qu'on récupère depuis le processeur
+	for i := 0; i < ip.Exemplars().Len(); i++ {
+		exemplar := ip.Exemplars().At(i)
+		c.logger.Info(fmt.Sprintf("Fabrice testing a-t-on l'examplar /s ?", exemplar.TraceID().HexString()))
+		// promExemplar := &prompb.Exemplar{
+		// 	Value:     exemplar.DoubleVal(),
+		// 	Timestamp: timestamp.FromTime(exemplar.Timestamp().AsTime()),
+		// }
+		// exemplar.FilteredAttributes().Range(func(key string, value pdata.AttributeValue) bool {
+		// 	promLabel := prompb.Label{
+		// 		Name:  key,
+		// 		Value: value.AsString(),
+		// 	}
+		// 	promExemplar.Labels = append(promExemplar.Labels, promLabel)
+		// 	return true
+		// })
+		// promExemplars = append(promExemplars, *promExemplar)
+	}
+
 	desc, attributes := c.getMetricMetadata(metric, ip.Attributes())
 
 	indicesMap := make(map[float64]int)
@@ -201,8 +222,10 @@ func (c *collector) convertDoubleHistogram(metric pdata.Metric) (prometheus.Metr
 	}
 
 	if c.sendTimestamps {
+		c.logger.Info("Fabrice on renvoi avec timestamp")
 		return prometheus.NewMetricWithTimestamp(ip.Timestamp().AsTime(), m), nil
 	}
+	c.logger.Info("Fabrice on renvoi sans timestamp")
 	return m, nil
 }
 

@@ -340,6 +340,7 @@ func TestCollectMetrics(t *testing.T) {
 }
 
 func TestAccumulateHistograms(t *testing.T) {
+	// FAB CELUI CI POUR TESTER L'AJOUT DES EXEMPLARS
 	tests := []struct {
 		name   string
 		metric func(time.Time) pdata.Metric
