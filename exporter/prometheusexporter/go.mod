@@ -1,4 +1,4 @@
-module github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter
+module github.com/fscellos/opentelemetry-collector-contrib/exporter/prometheusexporter
 
 go 1.17
 
